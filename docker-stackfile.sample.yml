@@ -1,0 +1,25 @@
+haproxy:
+  image: interaction/haproxy:master
+  links:
+    - letsencrypt
+    - web
+  ports:
+    - "80:80"
+    - "443:443"
+  roles:
+    - global
+  volumes_from:
+    - letsencrypt
+letsencrypt:
+  image: interaction/letsencrypt:master
+  environment:
+    - DOMAINS=foo.com,www.foo.com;bar.com,www.bar.com
+    - EMAIL=admins@interaction.net.au
+    # - OPTIONS=--staging
+  expose:
+    - "80"
+web:
+  environment:
+    - FORCE_SSL=yes
+    - VIRTUAL_HOST=*,https://*
+  image: dockercloud/hello-world:latest

@@ -1,0 +1,39 @@
+sudo: required
+
+services:
+  - docker
+
+language: python
+
+before_install:
+  # Upgrade Docker Engine. See: https://docs.docker.com/engine/installation/linux/ubuntulinux/
+  - sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+  - echo 'deb https://apt.dockerproject.org/repo ubuntu-trusty main' | sudo tee /etc/apt/sources.list.d/docker.list
+  - sudo apt-get update
+  # Install 1.9.x for build cache support. See: https://github.com/docker/docker/issues/20380#issuecomment-212388961
+  - sudo apt-get -o Dpkg::Options::="--force-confnew" -q -y install docker-engine=1.9.1-0~trusty
+
+  # Upgrade Docker Compose. See: https://github.com/docker/compose/releases
+  - curl -L https://github.com/docker/compose/releases/download/1.7.0/docker-compose-`uname -s`-`uname -m` | sudo tee /usr/local/bin/docker-compose > /dev/null
+  - sudo chmod +x /usr/local/bin/docker-compose
+
+  # Login and pull exsting images to populate the build cache.
+  - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - docker pull "interaction/letsencrypt:${TAG}" || true
+  - docker pull "interaction/haproxy:${TAG}" || true
+
+script:
+  - docker build -t "interaction/haproxy:${TAG}" haproxy
+  - docker build -t "interaction/letsencrypt:${TAG}" letsencrypt
+  - docker push "interaction/haproxy:${TAG}"
+  - docker push "interaction/letsencrypt:${TAG}"
+
+after_success:
+  - docker history "interaction/haproxy:${TAG}"
+  - docker history "interaction/letsencrypt:${TAG}"
+
+env:
+  global:
+    - DOCKER_EMAIL=admins@interaction.net.au
+    - DOCKER_USERNAME=theic
+    - TAG=$(echo ${TRAVIS_BRANCH} | sed 's/[^0-9A-Za-z]/_/g')

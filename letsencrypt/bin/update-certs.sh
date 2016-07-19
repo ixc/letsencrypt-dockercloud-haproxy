@@ -23,7 +23,6 @@ for DOMAINS in "${CERTS[@]}"; do
 		--domains "$DOMAINS" \
 		--email "$EMAIL" \
 		--expand \
-		--installer letsencrypt-combined \
 		--noninteractive \
 		--webroot \
 		--webroot-path /opt/www \

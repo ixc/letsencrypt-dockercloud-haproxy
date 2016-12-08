@@ -6,7 +6,6 @@ RUN apk add --update \
 		openssl \
 	&& rm -rf /var/cache/apk/*
 
-ENV CERT_FOLDER="/certs"
 ENV LIVE_CERT_FOLDER="/etc/letsencrypt/live"
 ENV PATH="/opt/haproxy/bin:$PATH"
 

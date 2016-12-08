@@ -33,8 +33,9 @@ In your stack file:
 Several environment variables are hard coded, and don't need to be defined in
 your stack file:
 
-  * The `CERT_FOLDER` environment variable is hard coded to `/certs` in the
-    `haproxy` image, to ensure SSL termination is enabled.
+  * The `DEFAULT_SSL_CERT` environment variable is set to the value of the
+  	default/first Let's Encrypt certificate (if not already explicitly set),
+  	to ensure SSL termination is enabled.
 
   * The `VIRTUAL_HOST` and `VIRTUAL_HOST_WEIGHT` environment variables are hard
     coded in the `letsencrypt` image, to ensure challenge requests for all

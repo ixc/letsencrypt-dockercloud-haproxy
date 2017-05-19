@@ -1,3 +1,9 @@
+# DEPRECATED
+
+Do not use this repository. Use https://github.com/ixc/letsencrypt-docker
+instead, which works with the official `dockercloud-haproxy` image and fixes
+a few problems and limitations with this `letsencrypt` image.
+
 # Overview
 
 The `haproxy` image will:
